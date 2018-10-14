@@ -1,9 +1,11 @@
 import redis
+import logging
 
 
 class AppConfig(object):
     DEBUG = True
     SECRET_KEY = 'dkdjlkafj33-49$34'
+    LEVEL = logging.DEBUG
 
     # redis config
     REDIS_HOST = '127.0.0.1'
@@ -25,10 +27,11 @@ class DevelopConfig(AppConfig):     # config on develop scheme
 
 
 class ProductConfig(AppConfig):     # config on product scheme
+    LEVEL = logging.ERROR
     DEBUG = False
 
 
-class TestingConfig(AppConfig):     # config on testing scheme
+class TestingConfig(AppConfig):     # config on testing scheme  
     TESTING = True
 
 

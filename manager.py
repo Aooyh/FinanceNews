@@ -1,9 +1,11 @@
 from info import create_app
 from flask_script import Manager
+from info.modules.index import index_blue
 from flask_migrate import MigrateCommand, Migrate
 
 
-app, db, redis_store = create_app('product')
+app, db, redis_store = create_app('testing')
+app.register_blueprint(index_blue)
 manager = Manager(app)
 Migrate(app, db)
 manager.add_command('dbc', MigrateCommand)
