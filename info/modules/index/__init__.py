@@ -9,9 +9,6 @@ index_blue = Blueprint('index', __name__, static_folder='../../static/news', tem
 
 @index_blue.route('/')
 def index():
-    redis_store = info.create_app()[2]
-    session['name'] = 'yh'
-    redis_store.set('gender', 'male')
     return render_template('index.html')
 
 
