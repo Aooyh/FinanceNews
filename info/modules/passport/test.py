@@ -1,2 +1,2 @@
-if all([2, 1]):
-    print('1')
+b = '4: 8'
+print(eval(b))

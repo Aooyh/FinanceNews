@@ -1,17 +1,45 @@
 from flask import jsonify, request, make_response
 from info.utils.captcha.captcha import captcha
+from info.models import User, db, redis_store
 from info.libs.yuntongxun.sms import CCP
-from flask import current_app
-from manager import redis_store
 from info.response_code import *
+from flask import current_app
 from info.constants import *
 import random
+
 
 def register():
     """
     用户注册访问路径
+    用户点击注册按钮时
+    通过main.js中submit函数的ajax请求
     """
-    pass
+    user_info = request.json
+    mobile = user_info.get('mobile')
+    sms_code = user_info.get('sms_code')
+    password = user_info.get('password')
+    try:
+        session_sms_code = redis_store.get('sms_code: %s' % mobile)
+        if session_sms_code:
+            if session_sms_code == sms_code:
+                new_user = User()
+                new_user.nick_name = 'Aooyh'
+                new_user.password_hash = password
+                new_user.mobile = mobile
+                try:
+                    db.session.add(new_user)
+                except Exception as e:
+                    current_app.logger.error(e)
+                    return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
+                db.session.commit()
+                return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])
+            else:
+                return jsonify(errno=RET.DATAERR, errmsg='手机验证码有误')
+        else:
+            return jsonify(errno=RET.DATAEXIST, errmsg='验证码信息已过期, 请重新获取')
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DATAERR])
 
 
 def get_image_code():
@@ -47,7 +75,6 @@ def get_sms_code():
     mobile = msg_dict.get('mobile')
     image_code = msg_dict.get('image_code')
     image_code_id = msg_dict.get('image_code_id')
-    current_app.logger.info(image_code_id)
     try:
         session_img_code = redis_store.get('image_code: %s' % image_code_id)
     except Exception as e:
@@ -67,7 +94,7 @@ def get_sms_code():
                 return jsonify(errno=RET.DATAERR, errmsg='短信发送失败')
             else:
                 try:
-                    redis_store.set('sms_code', msg_info, SMS_CODE_REDIS_EXPIRES)
+                    redis_store.set('sms_code: %s' % mobile, msg_info, SMS_CODE_REDIS_EXPIRES)
                     return jsonify(errno=RET.OK, errmsg=error_map[RET.OK])
                 except Exception as e:
                     current_app.logger.error(e)

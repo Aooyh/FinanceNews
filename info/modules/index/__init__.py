@@ -1,23 +1,26 @@
-from flask import current_app
+from flask import current_app, session,jsonify
+from info.response_code import *
+from info.models import User
 from flask import render_template
-from flask import Blueprint, session
-from info.utils.captcha.captcha import captcha
-import info
+from flask import Blueprint
 
-index_blue = Blueprint('index', __name__, static_folder='../../static/news', template_folder='../../templates/news')
+index_blue = Blueprint('index', __name__, static_folder='news', template_folder='../../templates/news')
 
 
 @index_blue.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        user_id = session.get('user_id')
+    except Exception as e:
+        current_app.logger.error(e)
+        return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
+    if user_id:
+        user_info = User.query.get(user_id).to_dict()
+    else:
+        user_info = ''
+    return render_template('index.html', user_info=user_info)
 
 
 @index_blue.route('/favicon.ico')
 def send_ico():
     return current_app.send_static_file('favicon.ico')
-
-
-@index_blue.route('/image_code')
-def image_code():
-    image_data = captcha.generate_captcha()[2]
-    return image_data

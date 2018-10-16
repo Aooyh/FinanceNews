@@ -124,7 +124,7 @@ $(function(){
             "mobile":mobile,
             "password":password
         }
-        /*
+
         $.ajax({
             url:'/passport/login',
             type:'post',
@@ -141,7 +141,6 @@ $(function(){
 
             }
         })
-        */
     })
 
 
@@ -182,7 +181,7 @@ $(function(){
             "sms_code":smscode,
             "password":password
         }
-        /*
+
         $.ajax({
             url:'/passport/register',
             type:'post',
@@ -192,6 +191,7 @@ $(function(){
             success: function (resp) {
                 //判断是否注册成功
                 if(resp.errno == '0'){
+                    alert('注册成功!');
                     //重新加载当前页面
                     window.location.reload()
                 }else{
@@ -199,22 +199,22 @@ $(function(){
                 }
             }
         })
-        */
+
     })
 })
 
 //退出登陆
 function logout() {
-    /*
+
     $.ajax({
         url:'/passport/logout',
         type:'post',
-        headers:{'X-CSRFToken':getCookie('csrf_token')},
+        // headers:{'X-CSRFToken':getCookie('csrf_token')},
         success:function (resp) {
             window.location.reload()
         }
     })
-    */
+
 }
 
 

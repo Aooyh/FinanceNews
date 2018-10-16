@@ -3,7 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from info import constants
 from info import create_app
 
-db = create_app()[1]
+app, db, redis_store = create_app('testing')
 
 
 class BaseModel(object):
