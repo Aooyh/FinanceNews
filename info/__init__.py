@@ -15,7 +15,7 @@ def create_app(config_name='develop'):
     app.config.from_object(config_obj)
     redis_store = redis.StrictRedis(host=config_obj.REDIS_HOST, port=config_obj.REDIS_PORT, decode_responses=True)
     db = SQLAlchemy(app)
-    CSRFProtect(app)
+    # CSRFProtect(app)
     Session(app)
 
     return app, db, redis_store
