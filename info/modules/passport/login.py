@@ -1,7 +1,9 @@
 from flask import session, jsonify, current_app
 from info.response_code import *
+from datetime import datetime
 from info.models import User
 from flask import request
+
 
 def login():
     """
@@ -14,14 +16,15 @@ def login():
     mobile = login_info.get('mobile')
     password = login_info.get('password')
     try:
-        user = User.query.filter(User.mobile==mobile).first()
+        user = User.query.filter(User.mobile == mobile).first()
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
     if user:
-        if user.password_hash == password:
+        if user.check_passowrd(password):
             try:
                 session['user_id'] = user.id
+                user.last_login = datetime.now()
             except Exception as e:
                 current_app.logger.error(e)
                 return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])

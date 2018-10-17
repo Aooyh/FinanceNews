@@ -24,7 +24,7 @@ def register():
             if session_sms_code == sms_code:
                 new_user = User()
                 new_user.nick_name = 'Aooyh'
-                new_user.password_hash = password
+                new_user.password = password
                 new_user.mobile = mobile
                 try:
                     db.session.add(new_user)

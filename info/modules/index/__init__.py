@@ -1,10 +1,10 @@
-from flask import current_app, session,jsonify
+from flask import current_app, session, jsonify
+from flask import render_template
 from info.response_code import *
 from info.models import User
-from flask import render_template
 from flask import Blueprint
 
-index_blue = Blueprint('index', __name__, static_folder='news', template_folder='../../templates/news')
+index_blue = Blueprint('index', __name__, template_folder='../../templates/news')
 
 
 @index_blue.route('/')
@@ -23,4 +23,4 @@ def index():
 
 @index_blue.route('/favicon.ico')
 def send_ico():
-    return current_app.send_static_file('favicon.ico')
+    return current_app.send_static_file('news/favicon.ico')
