@@ -2,6 +2,7 @@ from flask import Flask
 from config import config_dict
 from flask_session import Session
 from flask_wtf import CSRFProtect
+from .utils.commons import news_filter
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import generate_csrf
 from logging.handlers import RotatingFileHandler
@@ -14,6 +15,7 @@ def create_app(config_name='develop'):
     config_obj = config_dict.get(config_name)
     log_file(config_obj.LEVEL)
     app.config.from_object(config_obj)
+    app.add_template_filter(news_filter)
     redis_store = redis.StrictRedis(host=config_obj.REDIS_HOST, port=config_obj.REDIS_PORT, decode_responses=True)
     db = SQLAlchemy(app)
     CSRFProtect(app)
