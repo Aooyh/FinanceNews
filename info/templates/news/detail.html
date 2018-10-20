@@ -21,8 +21,10 @@
             </p>
             {{ news.content | safe }}
 
-        <a href="javascript:;" class="collection block-center" data-newid="" >收藏</a>
-        <a href="javascript:;" class="collected block-center" data-newid="" style="display: none">
+        <a href="javascript:;" class="collection block-center" data-newid="{{ news.id }}" user="{{ user_info }}"
+        style="display: {% if is_collect %}none{% else %}block{% endif %}">收藏</a>
+        <a href="javascript:;" class="collected block-center" data-newid="{{ news.id }}"
+           style="display: {% if is_collect %}block{% else %}none{% endif %}">
             <span class="out">已收藏</span><span class="over">取消收藏</span></a>
 
         {% if not user_info %}
@@ -30,12 +32,12 @@
             登录发表你的评论
         </div>
         {% else %}
-        <form action="" class="comment_form">
+        <form action="" class="comment_form" data-newsid="{{ news.id }}">
             <div class="person_pic">
                 <img src="../../static/news/images/cat.jpg" alt="用户图标">
             </div>
             <textarea placeholder="请发表您的评论" class="comment_input"></textarea>
-            <input type="submit" name="" value="评 论" class="comment_sub">
+            <input type="submit" name="" value="评 论" class="comment_sub" >
         </form>
         {% endif %}
 
@@ -43,35 +45,55 @@
         <div class="comment_count">
             {{ comment_list | length }}条评论
         </div>
-
-        <div class="comment_list_con">
+     <div class="comment_list_con">
+        {% for comment in comment_list %}
             <div class="comment_list">
-                 {% for comment in comment_list %}
                 <div class="person_pic fl">
-                    <img src="../../static/news/images/worm.jpg" alt="用户图标">
-                </div>
-                <div class="user_name{{ loop.index }} fl">{{ comment.id }}</div>
-                <div class="comment_text fl">
-                {{ comment.content }}
-                </div>
-                <div class="reply_text_con fl">
-                    <div class="user_name2">用户李思</div>
-                    <div class="reply_text">
+                    {% if user_info.avatar_url %}
+                        <img src="{{ user_info.avatar_url }}" alt="用户图标">
+                    {% else %}
+                        <img src="../../static/news/images/worm.jpg" alt="用户图标">
+                    {% endif %}
 
-                    </div>
                 </div>
-                <div class="comment_time fl">2017-01-01 00:00:00</div>
-                <a href="javascript:;" class="comment_up has_comment_up fr">1</a>
+                <div class="user_name fl">{{ user_info.nick_name }}</div>
+                <div class="comment_text fl">
+                    {{ comment.content }}
+                </div>
+
+                {# 判断是否有父评论 #}
+                {% if comment.parent %}
+                    <div class="reply_text_con fl">
+                        <div class="user_name2">{{ comment.parent.user.nick_name }}</div>
+                        <div class="reply_text">
+                            {{ comment.parent.content }}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="comment_time fl">{{ comment.create_time }}</div>
+                {# 点赞处理 #}
+                <a href="javascript:;" class="comment_up {% if comment.is_like %} has_comment_up {% endif %} fr"
+                   data-commentid="{{ comment.id }}" data-likecount="{{ comment.like_count }}">
+                    {% if comment.like_count > 0 %}
+                        {{ comment.like_count }}
+                    {% else %}
+                        赞
+                    {% endif %}
+                </a>
+
+
                 <a href="javascript:;" class="comment_reply fr">回复</a>
-                <from class="reply_form fl" data-newsid="" data-commentid="">
+                <from class="reply_form fl" data-newsid="{{ comment.news_id }}" data-commentid="{{ comment.id }}">
                     <textarea  class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
                     <input type="reset" name="" value="取消" class="reply_cancel fr">
                 </from>
-                 {% endfor %}
             </div>
+        {% endfor %}
+
         </div>
-        </div>
+    </div>
 {% endblock %}
 
 {% block authorBlock %}

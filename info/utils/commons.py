@@ -24,9 +24,10 @@ def log_in_ifo(view_fun):
             return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
         if user_id:
             from info.models import User
-            user_info = User.query.get(user_id).to_dict()
+            g.user = User.query.get(int(user_id))
+            g.user_info = g.user.to_dict()
         else:
-            user_info = ''
-        g.user_info = user_info
+            g.user = ''
+            g.user_info = ''
         return view_fun(*args, **kwargs)
     return wrapper
