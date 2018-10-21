@@ -1,4 +1,4 @@
-from flask import session, jsonify
+from flask import session, jsonify, request, render_template
 from info.response_code import *
 
 def logout():
@@ -7,4 +7,7 @@ def logout():
     :return:
     """
     session.pop('user_id')
-    return jsonify(errno=RET.OK, errmsg='退出成功')
+    if request.json:
+        render_template('index.html')
+    else:
+        return jsonify(errno=RET.OK, errmsg='退出成功')

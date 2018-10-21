@@ -6,6 +6,10 @@ from info.models import News, Comment, db, CommentLike
 
 @log_in_ifo
 def sub_comment():
+    """
+    用户评论提交
+    :return:
+    """
     comment_info = request.json
     news_id = comment_info.get('news_id')
     comment_content = comment_info.get('comment')
@@ -27,6 +31,10 @@ def sub_comment():
 
 @log_in_ifo
 def show_like():
+    """
+    用户点赞功能
+    :return:
+    """
     comment_action = request.json
     comment_id = comment_action.get('comment_id')
     action = comment_action.get('action')

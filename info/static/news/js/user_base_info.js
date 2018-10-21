@@ -10,8 +10,8 @@ $(function () {
 
         var signature = $("#signature").val();
         var nick_name = $("#nick_name").val();
-        // var gender = $(".gender").val()
-        var gender = $(".base_info").find('input:radio:checked').val();
+        var gender = $(".gender").val()
+        // var gender = $(".base_info").find('input:radio:checked').val();
 
 
         if (!nick_name) {
@@ -28,9 +28,9 @@ $(function () {
             "nick_name": nick_name,
             "gender": gender
         }
-        /*
+
         $.ajax({
-            url: "/user/base_info",
+            url: "/user_info/basic_info",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -43,11 +43,12 @@ $(function () {
                     $('.user_center_name', parent.document).html(params['nick_name'])
                     $('#nick_name', parent.document).html(params['nick_name'])
                     $('.input_sub').blur()
+                    alert('修改成功')
                 }else {
                     alert(resp.errmsg)
                 }
             }
         })
-        */
+
     })
 })

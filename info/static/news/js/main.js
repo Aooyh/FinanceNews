@@ -210,11 +210,21 @@ function logout() {
         url:'/passport/logout',
         type:'post',
         headers:{'X-CSRFToken':getCookie('csrf_token')},
+        data:{user_face: false},
         success:function (resp) {
             window.location.reload()
         }
     })
 
+}
+function user_logout() {
+
+    $.ajax({
+        url:'/passport/logout',
+        type:'post',
+        headers:{'X-CSRFToken':getCookie('csrf_token')},
+        data:{user_face: true}
+    })
 }
 
 

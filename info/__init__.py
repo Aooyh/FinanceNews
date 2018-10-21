@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, current_app, render_template
 from config import config_dict
 from flask_session import Session
 from flask_wtf import CSRFProtect
@@ -26,6 +26,11 @@ def create_app(config_name='develop'):
         csrf_token = generate_csrf()
         resp.set_cookie('csrf_token', csrf_token)
         return resp
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        current_app.logger.error(e)
+        return render_template('404.html')
 
     return app, db, redis_store
 

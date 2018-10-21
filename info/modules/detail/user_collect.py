@@ -6,6 +6,10 @@ from info.models import News, db
 
 @log_in_ifo
 def user_collect():
+    """
+    用户收藏功能
+    :return:
+    """
     info_data = request.json
     news_id = info_data.get('news_id')
     action = info_data.get('action')

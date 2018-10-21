@@ -16,6 +16,10 @@ $(function () {
         // 取到两次密码进行判断
         var new_password = params["new_password"];
         var new_password2 = params["new_password2"];
+        if (new_password == '' || new_password2 == ''){
+            alert('新密码不能为空')
+            return
+        }
 
         if (new_password != new_password2) {
             alert('两次密码输入不一致')
@@ -23,9 +27,9 @@ $(function () {
         }
 
         // TODO 修改密码
-        /*
+
         $.ajax({
-            url: "/user/pass_info",
+            url: "/user_info/pass_info",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -42,6 +46,5 @@ $(function () {
                 }
             }
         })
-        */
     })
 })

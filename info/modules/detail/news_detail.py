@@ -6,6 +6,11 @@ from info.models import News, User
 
 @log_in_ifo
 def news_detail(news_id):
+    """
+    显示新闻详细信息页面
+    :param news_id:
+    :return:
+    """
     try:
         news_obj = News.query.filter(News.id == news_id).first()
         news_rank = News.query.order_by(News.clicks.desc()).limit(8).all()

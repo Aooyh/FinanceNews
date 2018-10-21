@@ -26,13 +26,16 @@
         {% block  userinfoBlock%}
 
              {% if user_info %}
+
                  <div class="user_login fr">
+                 <a href="/user_info/user_info">
                  {% if user_info.avatar_url %}
                     <img src="{{ user_info.avatar_url }}" class="lgin_pic">
                  {% else %}
                     <img src="../../static/news/images/person01.png" class="lgin_pic">
                  {% endif %}
-                <a href="#">{{ user_info.get('nick_name') }}</a>
+                 </a>
+                <a href="/user_info/user_info">{{ user_info.get('nick_name') }}</a>
                 <a href="#" onclick="logout()">退出&nbsp;&nbsp;&nbsp;</a>
                  </div>
              {% else %}
