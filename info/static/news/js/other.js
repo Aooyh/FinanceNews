@@ -7,6 +7,11 @@ function decodeQuery(){
         return result;
     }, {});
 }
+function getCookie(name) {
+    var r = document.cookie.match("\\b" + name + "=([^;]*)\\b");
+    return r ? r[1] : undefined;
+}
+
 
 $(function(){
     // 页面加载完毕，获取新闻列表
@@ -19,9 +24,9 @@ $(function(){
             "action": "follow",
             "user_id": user_id
         }
-        /*
+
         $.ajax({
-            url: "/news/followed_user",
+            url: "/news/follow",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -45,7 +50,6 @@ $(function(){
                 }
             }
         })
-        */
     })
 
     // TODO 取消关注当前作者
@@ -55,9 +59,9 @@ $(function(){
             "action": "unfollow",
             "user_id": user_id
         }
-        /*
+
         $.ajax({
-            url: "/news/followed_user",
+            url: "/news/follow",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -81,35 +85,33 @@ $(function(){
                 }
             }
         })
-        */
+
     })
 })
 
 // TODO 获取新闻列表
 function getNewsList(page) {
     // 使用正则切割问号后面的参数,得到的是字典
-    var query = decodeQuery()
     var params = {
         "p": page,
-        "user_id": query["id"]
+        "user_id": $('.focus_other a').attr('data-userid')
     }
-    /*
-    $.get("/user/other_news_list", params, function (resp) {
+
+    $.get("/user_info/news_info", params, function (resp) {
         if (resp.errno == "0") {
             // 先清空原有的数据
             $(".article_list").html("");
             // 拼接数据
-            for (var i = 0; i<resp.data.news_list.length; i++) {
-                var news = resp.data.news_list[i];
+            for (var i = 0; i<resp.newsList.length; i++) {
+                var news = resp.newsList[i];
                 var html = '<li><a href="/news/'+ news.id +'" target="_blank">' + news.title + '</a><span>' + news.create_time + '</span></li>'
                 // 添加数据
                 $(".article_list").append(html)
             }
             // 设置页数和总页数
-            $("#pagination").pagination("setPage", resp.data.current_page, resp.data.total_page);
+            $("#pagination").pagination("setPage", resp.currentPage, resp.totalPage);
         }else {
             alert(resp.errmsg)
         }
     })
-    */
 }

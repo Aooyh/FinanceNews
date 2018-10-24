@@ -10,6 +10,8 @@ def sub_comment():
     用户评论提交
     :return:
     """
+    if not g.user:
+        return jsonify(errno=RET.SESSIONERR, errmsg='请登录后再试')
     comment_info = request.json
     news_id = comment_info.get('news_id')
     comment_content = comment_info.get('comment')
@@ -59,4 +61,4 @@ def show_like():
             current_app.logger.error(e)
             return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
     else:
-        return jsonify(errno=RET.DBERR, errmsg=error_map[RET.OK])
+        return jsonify(errno=RET.SESSIONERR, errmsg=error_map[RET.SESSIONERR])

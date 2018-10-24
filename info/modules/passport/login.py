@@ -24,6 +24,7 @@ def login():
         if user.check_passowrd(password):
             try:
                 session['user_id'] = user.id
+                session['is_admin'] = user.is_admin
                 user.last_login = datetime.now()
             except Exception as e:
                 current_app.logger.error(e)

@@ -12,7 +12,7 @@ $(function(){
     var $error = $('.error_tip');
     var $input = $('.input_txt3');
     var sHandler = 'edit';
-    var sId = 0;
+    var sId = $a.attr('cate_id');
 
     $a.click(function(){
         sHandler = 'edit';
@@ -68,9 +68,9 @@ $(function(){
         }
 
         // TODO 发起修改分类请求
-        /*
+
         $.ajax({
-            url:"/admin/add_category",
+            url:"/admin/news_type",
             method: "post",
             headers: {
                 "X-CSRFToken": getCookie("csrf_token")
@@ -86,7 +86,7 @@ $(function(){
                 }
             }
         })
-        */
+
 
     })
 })

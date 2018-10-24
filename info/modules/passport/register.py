@@ -23,7 +23,7 @@ def register():
         if session_sms_code:
             if session_sms_code == sms_code:
                 new_user = User()
-                new_user.nick_name = 'Aooyh'
+                new_user.nick_name = mobile
                 new_user.password = password
                 new_user.mobile = mobile
                 try:
@@ -85,6 +85,7 @@ def get_sms_code():
             redis_store.delete(image_code_id)
             ccp = CCP()
             msg_info = '%06d' % random.randint(0, 999999)
+            print(msg_info)
             try:
                 result = ccp.send_template_sms(mobile, [msg_info, SMS_CODE_REDIS_EXPIRES / 60], 1)
             except Exception as e:

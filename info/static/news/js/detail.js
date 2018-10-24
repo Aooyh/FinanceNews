@@ -305,7 +305,10 @@ $(function(){
 
                         //更新评论数量
                         updateCommentCount();
-                    }else {
+                    }
+                    else if (resp.errno == "4101"){
+                        $('.login_form_con').show();}
+                    else {
                         alert(resp.errmsg)
                     }
                 }
@@ -316,14 +319,13 @@ $(function(){
 
         // 关注当前新闻作者
     $(".focus").click(function () {
-        /*
-        var user_id = $(this).attr('data-userid')
+        var user_id = $(this).attr('data-authorid')
         var params = {
             "action": "follow",
             "user_id": user_id
         }
         $.ajax({
-            url: "/news/followed_user",
+            url: "/news/follow",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -347,19 +349,19 @@ $(function(){
                 }
             }
         })
-        */
+
     })
 
     // 取消关注当前新闻作者
     $(".focused").click(function () {
-        /*
-        var user_id = $(this).attr('data-userid')
+
+        var user_id = $(this).attr('data-authorid')
         var params = {
             "action": "unfollow",
             "user_id": user_id
         }
         $.ajax({
-            url: "/news/followed_user",
+            url: "/news/follow",
             type: "post",
             contentType: "application/json",
             headers: {
@@ -374,16 +376,13 @@ $(function(){
                     $(".follows b").html(count + "")
                     $(".focus").show()
                     $(".focused").hide()
-                }else if (resp.errno == "4101"){
-                    // 未登录，弹出登录框
-                    $('.login_form_con').show();
-                }else {
+                }
+                else {
                     // 取消关注失败
                     alert(resp.errmsg)
                 }
             }
         })
-        */
     })
 })
 

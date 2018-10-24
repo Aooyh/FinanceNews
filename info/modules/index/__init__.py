@@ -19,7 +19,7 @@ def index():
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
-    return render_template('index.html', user_info=g.user_info, category_list=category_list, news_list=news_list)
+    return render_template('news/index.html', user_info=g.user_info, category_list=category_list, news_list=news_list)
 
 
 @index_blue.route('/newslist')
@@ -31,9 +31,10 @@ def show_news():
     news_list = list()
     try:
         if cid == 1:
-            paginate = News.query.order_by(News.create_time.desc()).paginate(page, per_page, False)
+            paginate = News.query.order_by(News.create_time.desc()).\
+                filter(News.status == 0).paginate(page, per_page, False)
         else:
-            paginate = News.query.filter(News.category_id == cid).\
+            paginate = News.query.filter(News.category_id == cid, News.status == 0).\
                 order_by(News.clicks.desc()).paginate(page, per_page, False)
         total_page = paginate.pages
         cur_page = paginate.page

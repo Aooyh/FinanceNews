@@ -81,9 +81,8 @@
                         赞
                     {% endif %}
                 </a>
+                    <a href="javascript:;" class="comment_reply fr">回复</a>
 
-
-                <a href="javascript:;" class="comment_reply fr">回复</a>
                 <from class="reply_form fl" data-newsid="{{ comment.news_id }}" data-commentid="{{ comment.id }}">
                     <textarea  class="reply_input"></textarea>
                     <input type="submit" name="" value="回复" class="reply_sub fr">
@@ -99,13 +98,24 @@
 {% block authorBlock %}
     {% if author %}
     <div class="author_card">
-        <a href="#" class="author_pic"><img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
-        <a href="#" class="author_name">{{ author.name }}</a>
-        <div class="author_resume">{{ author.name }}的简介,{{ author.signature }}</div>
-        <div class="writings"><span>总篇数</span><b>{{ author.news_list | length }}</b></div>
-        <div class="follows"><span>粉丝</span><b>{{ author.followers | length }}</b></div>
-        <a href="javascript:;" class="focus fr">关注</a>
-        <a href="javascript:;" class="focused fr"><span class="out">已关注</span><span class="over">取消关注</span></a>
+        <a href="{% if user_info.id == author.id %}/user_info/user_info{% else %}/user_info/other_info/{{ author.id }}{% endif %}" class="author_pic">
+            {% if author.avatar_url %}
+                <img src="{{ author.avatar_url }} "></a>
+            {% else %}
+                <img src="../../static/news/images/user_pic.png" alt="author_pic"></a>
+            {% endif %}
+
+        <a href="{% if user_info.id == author.id %}/user_info/user_info{% else %}/user_info/other_info/{{ author.id }}{% endif %}" class="author_name">{{ author.nick_name }}</a>
+        <div class="author_resume">{{ author.nick_name }}的简介,{{ author.signature }}</div>
+        <div class="writings"><span>总篇数</span><b>{{ author.news_count }}</b></div>
+        <div class="follows"><span>粉丝</span><b>{{ author.followers_count }}</b></div>
+        {% if author.nick_name != user_info.nick_name %}
+            <a href="javascript:;" class="focus fr" data-authorid="{{ author.id }}"
+               style="display: {% if author.is_followed %} none {% else %} block {% endif %}">关注</a>
+            <a href="javascript:;" class="focused fr" data-authorid="{{ author.id }}"
+            style="display: {% if author.is_followed %} block {% else %} none {% endif %}"><span class="out">已关注
+            </span><span class="over">取消关注</span></a>
+        {% endif %}
     </div>
     {% endif %}
 {% endblock %}

@@ -16,11 +16,11 @@
 
             {% for followed in followed_list %}
             <li class="author_card card_list">
-                <a href="#" target="_blank" class="author_pic">
+                <a href="/user_info/other_info/{{ followed.id }}" target="_blank" class="author_pic">
                     <img src="{% if followed.avatar_url %}{{ followed.avatar_url }}
                                 {% else %}../../static/news/images/person01.png {% endif %}" alt="author_pic">
                 </a>
-                <a href="#" target="_blank" class="author_name">{{ followed.nick_name }}</a>
+                <a href="/user_info/other_info/{{ followed.id }}" target="_blank" class="author_name">{{ followed.nick_name }}</a>
                 <div class="author_resume">{{ followed.signature }}</div>
                 <div class="writings"><span>总篇数</span><b>{{ followed.news_count }}</b></div>
                 <div class="follows"><span>粉丝</span><b>{{ followed.followers_count }}</b></div>

@@ -144,7 +144,7 @@ class News(BaseModel, db.Model):
             "content": self.content,
             "comments_count": self.comments.count(),
             "clicks": self.clicks,
-            "category": self.category.to_dict(),
+            "category_id": self.category_id,
             "index_image_url": self.index_image_url,
             "author": self.user.to_dict() if self.user else None
         }

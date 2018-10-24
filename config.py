@@ -20,6 +20,7 @@ class AppConfig(object):
     # mysql config
     SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://root:5998381@localhost:3306/finnews_pro'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_COMMIT_ON_TEARDOWN = True
 
 
 class DevelopConfig(AppConfig):     # config on develop scheme

@@ -8,6 +8,10 @@ from info.response_code import *
 
 @log_in_ifo
 def user_info():
+    """
+    若用户未登录, 无法访问用户页面
+    :return:
+    """
     if not g.user:
         redirect('/')
     return render_template('user.html', user_info=g.user_info)
@@ -158,6 +162,7 @@ def news_release():
             new_news.digest = news_info.get('digest')
             new_news.title = news_info.get('title')
             new_news.source = g.user.nick_name
+            new_news.user_id = g.user.id
             image_url = request.files.get('index_image')
             if not image_url:
                 return jsonify(errno=RET.NODATA, errmsg='没有上传图片')
@@ -182,14 +187,40 @@ def user_news():
     :return:
     """
     try:
-        page = int(request.args.get('p', '1'))
-        paginate = News.query.filter(News.source == g.user.nick_name).paginate(page, 4, False)
-        news_obj_list = paginate.items
-        current_page = paginate.page
-        total_page = paginate.pages
-        news_list = [news.to_review_dict() for news in news_obj_list]
-        return render_template('user_news_list.html', newsList=news_list,
-                               currentPage=current_page, totalPage=total_page)
+        if not request.args.get('user_id'):
+            page = int(request.args.get('p', '1'))
+            paginate = News.query.filter(News.source == g.user.nick_name).paginate(page, 4, False)
+            news_obj_list = paginate.items
+            current_page = paginate.page
+            total_page = paginate.pages
+            news_list = [news.to_review_dict() for news in news_obj_list]
+            return render_template('user_news_list.html', newsList=news_list,
+                                   currentPage=current_page, totalPage=total_page)
+        else:
+            page = int(request.args.get('p', '1'))
+            user_id = request.args.get('user_id')
+            user = User.query.get(user_id)
+            paginate = News.query.filter(News.source == user.nick_name).paginate(page, 4, False)
+            news_obj_list = paginate.items
+            current_page = paginate.page
+            total_page = paginate.pages
+            news_list = [news.to_review_dict() for news in news_obj_list]
+            return jsonify(errno=RET.OK, newsList=news_list, currentPage=current_page, totalPage=total_page)
     except Exception as e:
         current_app.logger.error(e)
         return jsonify(errno=RET.DBERR, errmsg=error_map[RET.DBERR])
+
+
+@log_in_ifo
+def others(user_id):
+    """
+    其他用户页面请求
+    :param user_id:
+    :return:
+    """
+    author_obj = User.query.get(user_id)
+    author = author_obj.to_dict()
+    if g.user:
+        if author_obj in g.user.followed:
+            author['is_followed'] = True
+    return render_template('other.html', user_info=g.user_info, author=author)
